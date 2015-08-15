@@ -1,4 +1,22 @@
 Rails.application.routes.draw do
+
+  # get 'astro_serves/index'
+
+  # get 'astro_serves/show'
+
+  # get 'astro_serves/create'
+
+  scope 'v1', defaults: {format: 'json'} do
+    resources :astro_serves, only: [:create, :show, :index] do
+      get 'metadata', on: :member
+    end
+
+    get 'astro_serves', to: 'astro_serves#index', defaults: {format: 'json'}
+    get 'astro_serves/:uuid/show', to: 'astro_serves#show', defaults: {format: 'json'}
+    post 'astro_serves/:uuid/create', to: 'astro_serves#create', defaults: {format: 'json'}
+
+  end
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
