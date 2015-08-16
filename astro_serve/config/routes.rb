@@ -1,11 +1,5 @@
 Rails.application.routes.draw do
 
-  # get 'astro_serves/index'
-
-  # get 'astro_serves/show'
-
-  # get 'astro_serves/create'
-
   scope 'v1', defaults: {format: 'json'} do
     resources :astro_serves, only: [:create, :show, :index] do
       get 'metadata', on: :member
