@@ -19,7 +19,7 @@ pickle-email-*.html
 **/config/initializers/secret_token.rb
 **/config/**/*.yml
 /**/config/**/*.yml
-/**/config/*.yml
+astro_app/config/*.yml
 
 ## Environment normalisation:
 **/.bundle
