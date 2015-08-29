@@ -1,0 +1,8 @@
+%div{:style => "height: 305px"}
+  %carousel{:interval => "interval", "no-wrap" => "noWrap"}
+    %slide{:active => "slide.active", "ng-repeat" => "slide in slides"}
+      %img{"ng-src" => "{{slide.picture_url}}", :style => "margin:auto;"}
+        .carousel-caption
+          %h4 Slide {{$index}}
+          %p {{slide.title}}
+
