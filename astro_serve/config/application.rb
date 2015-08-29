@@ -25,5 +25,12 @@ module AstroServe
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+
+  #   config.action_dispatch.default_headers = {
+  #   'Access-Control-Allow-Origin' => 'http://localhost',
+  #   'Access-Control-Allow-Cross-Origin' => 'http://localhost',
+  #   'Access-Control-Max-Age' => '1728000',
+  #   'Access-Control-Request-Method' => %w{GET POST OPTIONS}.join(",")
+  # }
   end
 end
