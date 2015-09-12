@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'nokogiri'
 require 'open-uri'
+require 'rest_client'
 
 require_relative '../../app/models/astro_blog'
 namespace :blog do
@@ -26,5 +27,32 @@ namespace :blog do
 
 		data.each{|d| AstroBlog.create!(d)}
 		# {title: '', description: '', url: '', explanation: '', picture_url: '', date: DateTime.parse('')},
+	end
+
+	desc 'Reset database and scrap Astronomy picture of the day'
+	task :create_blog do
+		# Rake::Task['blog:clear'].invoke
+		site = 'http://apod.nasa.gov/apod'
+		archivepix = 'archivepix.html'
+
+		archive = Nokogiri::HTML(open(File.join(site, archivepix))) 
+		pages = archive.xpath("//b/a").collect {|node| [node.text.strip, node['href']]}
+
+		pages.collect do |page|
+			title = page[0]
+			link = page[1]
+
+			current  = Nokogiri::HTML(open(File.join(site, link)))
+
+			date = current.xpath('//center/p').collect{|node| node.text.strip}[1]
+			picture_url = current.xpath('//center/p/a').collect{|node| node['href']}[1]
+			puts picture_url
+		end
+
+		# puts titles
+		# c=(page.at_css('b')).text.scan(/\w+ \d{1,2} \d{4}:/)
+		# puts c.length
+		# puts c[0]
+		# puts c[1656]
 	end
 end
