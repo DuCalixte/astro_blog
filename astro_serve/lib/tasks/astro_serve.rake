@@ -35,18 +35,25 @@ namespace :blog do
 		site = 'http://apod.nasa.gov/apod'
 		archivepix = 'archivepix.html'
 
+		regex_date = Regexp.new(/[0-3]\d{3} (?:(?:[Jj]an|[Ff]ebr)uary|(?:[Ss]ept|[Oo]ct|[Nn]ov|[Dd]ec)ember|(?:[Mm]a)(?:rch|y)|(?:[Jj]u(?:ne|ly))|(?:[Aa](?:pril|ugust))) (?:[0-2]\d|3[0-1])/)
+		regex_img = Regexp.new(/image\/.*\.png/)
+		regex_expl = Regexp.new(/Explanation:(?:\s*.*\s*\r*\n*)*/)
+
 		archive = Nokogiri::HTML(open(File.join(site, archivepix))) 
 		pages = archive.xpath("//b/a").collect {|node| [node.text.strip, node['href']]}
+		description = 'd'
 
 		pages.collect do |page|
 			title = page[0]
-			link = page[1]
+			link = File.join(site, page[1])
 
-			current  = Nokogiri::HTML(open(File.join(site, link)))
+			current  = Nokogiri::HTML(open(link))
 
-			date = current.xpath('//center/p').collect{|node| node.text.strip}[1]
-			picture_url = current.xpath('//center/p/a').collect{|node| node['href']}[1]
-			puts picture_url
+			date = current.xpath('//center/p').collect{|node| node.text.strip.scan(regex_date)}
+			picture_url = current.xpath('//center/p/a').collect{|node| node['href'].scan(regex_img)}
+			description = current.xpath('//center').collect{|node| node.text.gsub(/\r*\n*/, "").strip}[1].sub(/#{title}/, "#{title} - ").gsub(/([&,:,\,])/,'\1 ').gsub(/\s+/, ' ')
+			explanation = current.xpath('//p').collect{|node| node.text.strip.scan(regex_expl)}.flatten.first.gsub(/\r*\n*/, "").gsub(/([&,:,\,\.])/,'\1 ').gsub(/\s+/, ' ')
+
 		end
 
 		# puts titles
@@ -55,4 +62,6 @@ namespace :blog do
 		# puts c[0]
 		# puts c[1656]
 	end
+
 end
+
