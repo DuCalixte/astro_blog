@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 20150815033520) do
   create_table "astro_blogs", id: false, force: :cascade do |t|
     t.string   "uuid",        limit: 50,    null: false
     t.string   "title",       limit: 255
-    t.string   "description", limit: 255
+    t.text     "description", limit: 65535
     t.string   "url",         limit: 255
     t.text     "explanation", limit: 65535
     t.string   "picture_url", limit: 255
@@ -24,5 +24,7 @@ ActiveRecord::Schema.define(version: 20150815033520) do
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
   end
+
+  add_index "astro_blogs", ["title", "url"], name: "astro_blogs_title_with_link", unique: true, using: :btree
 
 end
